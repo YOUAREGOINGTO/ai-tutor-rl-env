@@ -1,0 +1,29 @@
+"Python Basics":
+  _description: "Covers core Python programming concepts: variables, loops, and data structures."
+  "Chapter 1: Variables":
+    summary: "Covers variable assignment, naming rules, and basic types."
+    content_path: "content/python_basics/chapter1_variables.md"
+  "Chapter 4: For Loops":
+    summary: "Explains iteration over sequences using for loops and range()."
+    content_path: "content/python_basics/chapter4_loops.md"
+  "Chapter 7: Dictionaries":
+    summary: "Covers dict creation, key access, KeyError handling, and .get()."
+    content_path: "content/python_basics/chapter7_dicts.md"
+
+"Math Fundamentals":
+  _description: "Covers mathematical concepts: interest, growth, and sequences."
+  "Chapter 3: Interest & Growth":
+    summary: "Explains simple and compound interest formulas with examples."
+    content_path: "content/math_fundamentals/chapter3_interest.md"
+  "Chapter 5: Sequences":
+    summary: "Covers arithmetic and geometric sequences and their sums."
+    content_path: "content/math_fundamentals/chapter5_sequences.md"
+
+"Python Algorithms":
+  _description: "Covers Python functions, scope, and algorithmic implementations."
+  "Chapter 2: Functions & Scope":
+    summary: "Covers function definition, arguments, return values, and scope."
+    content_path: "content/python_algorithms/chapter2_functions.md"
+  "Chapter 6: Sorting Algorithms":
+    summary: "Covers bubble sort, merge sort, and their time complexities."
+    content_path: "content/python_algorithms/chapter6_sorting.md"

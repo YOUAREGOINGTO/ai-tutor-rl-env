@@ -1,0 +1,76 @@
+easy_1:
+  difficulty: easy
+  student_question: "What does the Python Basics book say about For Loops?"
+  required_books: ["Python Basics"]
+  max_steps: 5
+  ground_truth_answer: "For loops iterate over sequences. range(start, stop, step) controls iteration. Example: for i in range(5): print(i)"
+  grading_rubric: |
+    - Must explain what for loops do (iterate over sequences)
+    - Must mention range() with its parameters
+    - Must include a working code example
+    - Deduct for vague or incomplete explanations
+
+easy_2:
+  difficulty: easy
+  student_question: "How do I declare variables in Python?"
+  required_books: ["Python Basics"]
+  max_steps: 5
+  ground_truth_answer: "Variables are assigned with =. Python is dynamically typed. Example: x = 10 or name = 'Alice'."
+  grading_rubric: |
+    - Must explain the = assignment operator
+    - Must mention dynamic typing
+    - Must include at least one concrete example
+    - Deduct if no example is given
+
+medium_1:
+  difficulty: medium
+  student_question: "I keep getting a KeyError in my Python code. Where is that covered and how do I fix it?"
+  required_books: ["Python Basics"]
+  max_steps: 8
+  ground_truth_answer: "KeyError is raised when accessing a missing dictionary key. Fix using .get(key, default) to return a fallback instead of crashing. Covered in Python Basics Chapter 7: Dictionaries."
+  grading_rubric: |
+    - Must identify KeyError as a dictionary key access error
+    - Must explain .get(key, default) as the correct fix with syntax
+    - Must cite Python Basics Chapter 7: Dictionaries
+    - Deduct heavily if the fix is wrong, missing, or not explained
+    - Deduct if chapter citation is absent
+
+medium_2:
+  difficulty: medium
+  student_question: "What is the difference between bubble sort and merge sort?"
+  required_books: ["Python Algorithms"]
+  max_steps: 8
+  ground_truth_answer: "Bubble sort is O(n²); merge sort is O(n log n) and faster for large inputs. Python Algorithms Chapter 6 covers both with code."
+  grading_rubric: |
+    - Must state both time complexities correctly (O(n²) vs O(n log n))
+    - Must explain which is faster and why (input size matters)
+    - Must cite Python Algorithms Chapter 6: Sorting Algorithms
+    - Code examples improve the score but are not required
+
+hard_1:
+  difficulty: hard
+  student_question: "I need to calculate Compound Interest in Python. Can you show me the formula and write the function?"
+  required_books: ["Math Fundamentals", "Python Algorithms"]
+  max_steps: 12
+  ground_truth_answer: "Formula from Math Fundamentals Ch3: A = P*(1+r/n)**(n*t). Python function from Python Algorithms Ch2: def compound_interest(P, r, n, t): return P*(1+r/n)**(n*t)"
+  grading_rubric: |
+    - Must provide the formula A = P*(1+r/n)**(n*t) from Math Fundamentals Ch3
+    - Must explain each variable (P=principal, r=rate, n=compounds/year, t=years)
+    - Must include a working Python function implementing the formula
+    - Must explicitly cite BOTH Math Fundamentals Ch3 AND Python Algorithms Ch2
+    - Deduct 0.4 if either citation is missing
+    - Deduct if formula variables are left unexplained
+
+hard_2:
+  difficulty: hard
+  student_question: "Explain geometric sequences AND write a Python function to compute their sum."
+  required_books: ["Math Fundamentals", "Python Algorithms"]
+  max_steps: 12
+  ground_truth_answer: "Geometric sequence sum from Math Fundamentals Ch5: S = a*(1-r**n)/(1-r). Python function implementing it from Python Algorithms Ch2 function structure."
+  grading_rubric: |
+    - Must explain what a geometric sequence is (each term multiplied by common ratio)
+    - Must provide the sum formula S = a*(1-r**n)/(1-r) from Math Fundamentals Ch5
+    - Must write a Python function that implements the formula
+    - Must cite both Math Fundamentals Ch5 AND Python Algorithms Ch2
+    - Deduct if formula is missing or Python function is absent
+    - Deduct if neither book is cited

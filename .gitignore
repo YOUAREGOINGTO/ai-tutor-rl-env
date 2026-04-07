@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+test_judge.py
+.claude/
+Open Env Hackathon  Tutorial Summary.txt
+Claude-Basic idea review and feedback.md
+server/Dockerfile
