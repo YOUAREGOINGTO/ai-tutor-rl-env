@@ -1,3 +1,13 @@
+---
+title: Hierarchical RAG AI Tutor
+emoji: 📚
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 8000
+pinned: false
+---
+
 # Hierarchical RAG AI Tutor Environment
 
 An OpenEnv-compatible RL environment where an LLM agent acts as an AI Tutor. The agent navigates a structured library of educational books using a hierarchical RAG tool chain to answer student questions. Graded by an LLM-as-judge with per-task rubrics.
