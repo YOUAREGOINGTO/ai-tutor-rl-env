@@ -9,7 +9,7 @@ ROOT_DIR   = SERVER_DIR.parent
 sys.path.insert(0, str(SERVER_DIR))
 sys.path.insert(0, str(ROOT_DIR))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 from environment import TutorEnvironment
 from models import TutorAction
@@ -112,7 +112,7 @@ def get_state_list():
 
 
 @app.post("/reset")
-def reset(req: ResetRequest):
+def reset(req: ResetRequest = Body(default=ResetRequest())):
     sid = str(uuid.uuid4())
     try:
         obs = env.reset(difficulty=req.difficulty, task_id=req.task_id)
