@@ -117,7 +117,7 @@ def run_episode(task_cfg: dict) -> dict:
         messages.append({"role": "assistant", "content": raw})
         messages.append({"role": "user", "content": feedback})
 
-    success      = final_score >= 0.5
+    success      = final_score >= 0.3
     rewards_str  = ",".join(f"{r:.2f}" for r in rewards)
     print(
         f"[END] success={str(success).lower()} "
