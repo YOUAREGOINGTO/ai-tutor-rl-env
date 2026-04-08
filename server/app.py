@@ -10,7 +10,8 @@ sys.path.insert(0, str(SERVER_DIR))
 sys.path.insert(0, str(ROOT_DIR))
 
 import gradio as gr
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from environment import TutorEnvironment
 from models import TutorAction
@@ -42,7 +43,11 @@ class StepRequest(BaseModel):
 # ── Endpoints ──────────────────────────────────────────────────────────────────
 
 @app.get("/")
-def root():
+def root(request: Request):
+    # Browsers get the Gradio UI; API clients get JSON
+    accept = request.headers.get("accept", "")
+    if "text/html" in accept:
+        return RedirectResponse(url="/ui")
     return {
         "name": "hierarchical-rag-tutor",
         "description": "Hierarchical RAG AI Tutor RL Environment",
