@@ -19,11 +19,13 @@ ENV_NAME     = "hierarchical-rag-tutor"
 
 client = OpenAI(api_key=HF_TOKEN, base_url=API_BASE_URL)
 
-# One representative task per difficulty for validation
+# Representative tasks covering all difficulties
 EVAL_TASKS = [
-    {"difficulty": "easy",   "task_id": "easy_1"},
-    {"difficulty": "medium", "task_id": "medium_1"},
-    {"difficulty": "hard",   "task_id": "hard_1"},
+    {"difficulty": "easy",   "task_id": "easy_3"},    # Alien Flora — hallucination prevention
+    {"difficulty": "medium", "task_id": "medium_1"},  # KeyError debugging + citation
+    {"difficulty": "medium", "task_id": "medium_3"},  # RNN exploding gradients (ML)
+    {"difficulty": "hard",   "task_id": "hard_1"},    # Compound interest — multi-book
+    {"difficulty": "hard",   "task_id": "hard_3"},    # Qubit erasure — Quantum + Thermodynamics
 ]
 
 # System prompt is provided by the environment on reset() via observation.system_prompt
