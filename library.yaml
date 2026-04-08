@@ -52,6 +52,12 @@
     summary: "Covers the quantum operations formalism (Kraus operators), non-unitary transformations, trace-preserving maps, and qubit erasure with thermodynamic consequences."
     content_path: "content/quantum_computation/chapter8_quantum_operations.md"
 
+"Statistics for Data Science":
+  _description: "Covers foundational statistics for data scientists: probability distributions, hypothesis testing, and their applications in machine learning."
+  "Chapter 2: The Normal Distribution":
+    summary: "Explains the normal (Gaussian) distribution, its bell-curve shape, the 68-95-99.7 empirical rule, z-scores, and why the Central Limit Theorem makes it appear everywhere in real data and ML."
+    content_path: "content/statistics/chapter2_normal_distribution.md"
+
 "Thermodynamics of Computation":
   _description: "A specialized textbook connecting statistical mechanics, information theory, and the physical limits of computation."
   "Chapter 4: Landauer's Principle and the Cost of Forgetting":

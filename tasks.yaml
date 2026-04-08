@@ -1,26 +1,29 @@
 easy_1:
   difficulty: easy
-  student_question: "What does the Python Basics book say about For Loops?"
-  required_books: ["Python Basics"]
+  student_question: "I wrote a Python function to calculate something but when I use the result outside the function I get None. What am I doing wrong?"
+  required_books: ["Python Algorithms"]
   max_steps: 5
-  ground_truth_answer: "For loops iterate over sequences. range(start, stop, step) controls iteration. Example: for i in range(5): print(i)"
+  ground_truth_answer: "The function uses print() instead of return. print() displays output but evaluates to None. Use return to send a value back to the caller. Covered in Python Algorithms Chapter 2: Functions & Scope."
   grading_rubric: |
-    - Must explain what for loops do (iterate over sequences)
-    - Must mention range() with its parameters
-    - Must include a working code example
-    - Deduct for vague or incomplete explanations
+    - Must identify the return vs print distinction as the root cause
+    - Must explain that print() returns None while return sends the value back to the caller
+    - Must include a corrected code example using return
+    - Must cite Python Algorithms Chapter 2: Functions & Scope
+    - Deduct heavily if fix is vague or citation is absent
 
 easy_2:
   difficulty: easy
-  student_question: "How do I declare variables in Python?"
-  required_books: ["Python Basics"]
+  student_question: "What is a normal distribution and why does it appear so often in real-world data and machine learning?"
+  required_books: ["Statistics for Data Science"]
   max_steps: 5
-  ground_truth_answer: "Variables are assigned with =. Python is dynamically typed. Example: x = 10 or name = 'Alice'."
+  ground_truth_answer: "A normal distribution is a symmetric bell-shaped distribution defined by mean (μ) and standard deviation (σ). It appears everywhere due to the Central Limit Theorem. The 68-95-99.7 rule describes data spread. In ML it is used for weight initialization, anomaly detection, and Gaussian Naive Bayes."
   grading_rubric: |
-    - Must explain the = assignment operator
-    - Must mention dynamic typing
-    - Must include at least one concrete example
-    - Deduct if no example is given
+    - Must define normal distribution as symmetric and bell-shaped with parameters μ and σ
+    - Must explain the Central Limit Theorem as the reason it appears in real data
+    - Must state the 68-95-99.7 empirical rule
+    - Must mention at least one ML application (weight init, anomaly detection, etc.)
+    - Must cite Statistics for Data Science Chapter 2: The Normal Distribution
+    - Deduct if CLT is not mentioned or no ML application given
 
 medium_1:
   difficulty: medium
