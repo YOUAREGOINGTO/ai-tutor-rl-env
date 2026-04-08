@@ -90,16 +90,16 @@ def _call_judge(task: TutorState, answer: str) -> str:
     system_prompt = (
         "You are a strict educational evaluator.\n"
         "Given a student question, a ground-truth answer, grading criteria, "
-        "and a tutor's response, score the response between 0.0 and 1.0.\n\n"
+        "and a tutor's response, score the response.\n\n"
         "Grading criteria for this specific question:\n"
         f"{task.grading_rubric}\n\n"
-        "General scoring guide:\n"
-        "- 1.0: All criteria met, correct, clear, sources cited.\n"
+        "General scoring guide (score must be strictly between 0 and 1, never 0.0 or 1.0):\n"
+        "- 0.95: All criteria met, correct, clear, sources cited.\n"
         "- 0.7-0.9: Mostly correct, minor omissions.\n"
         "- 0.4-0.6: Partially correct, key concept missing.\n"
         "- 0.1-0.3: Vague or mostly wrong.\n"
-        "- 0.0: Completely wrong or empty.\n\n"
-        'Respond ONLY with valid JSON: {"score": <float 0.0-1.0>, "student_reply": "<realistic follow-up>"}'
+        "- 0.05: Completely wrong or empty.\n\n"
+        'Respond ONLY with valid JSON: {"score": <float strictly between 0 and 1>, "student_reply": "<realistic follow-up>"}'
     )
     user_prompt = (
         f"Student Question: {task.student_question}\n\n"
