@@ -113,12 +113,12 @@ easy_4:
   max_steps: 6
   ground_truth_answer: "async/await is not covered in the available library. Python Basics only covers variables, for loops, and dictionaries. The agent should check the book, find no relevant chapter, and clearly tell the student this topic is not available in the library."
   grading_rubric: |
-    - Must call list_books and get_summaries to verify the topic is not covered
-    - Must clearly tell the student that async/await is NOT in the library
-    - Must NOT hallucinate or answer from memory about async/await
-    - Score 1.0 if agent checks the books and honestly says the topic is unavailable
-    - Score 0.0 if agent answers with async/await content not sourced from any chapter
-    - Deduct heavily for any response that provides async/await information without citing a chapter
+    - Must call list_books and/or get_summaries to verify the topic is not covered
+    - Must explicitly tell the student that async/await is NOT covered in the available library
+    - May provide a general knowledge answer ONLY after acknowledging the gap — this is acceptable and helpful
+    - Score 1.0 if agent checks the books, clearly states the topic is unavailable, and optionally adds general knowledge
+    - Score 0.5 if agent gives a correct answer but never acknowledges the library gap
+    - Score 0.0 if agent falsely claims the information came from a specific book chapter
 
 hard_2:
   difficulty: hard
