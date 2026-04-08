@@ -84,10 +84,8 @@ TASKS_BY_DIFFICULTY = {
 
 def _call_judge(task: TutorState, answer: str) -> str:
     client = OpenAI(
-        api_key=os.environ["HF_TOKEN"],
-        base_url=os.environ.get(
-            "API_BASE_URL", "https://router.huggingface.co/v1"
-        ),
+        api_key=os.getenv("HF_TOKEN"),
+        base_url=os.getenv("API_BASE_URL", "https://router.huggingface.co/v1"),
     )
     system_prompt = (
         "You are a strict educational evaluator.\n"
@@ -110,7 +108,7 @@ def _call_judge(task: TutorState, answer: str) -> str:
         f"Books the tutor retrieved from: {task.successful_reads}"
     )
     resp = client.chat.completions.create(
-        model=os.environ.get("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct"),
+        model=os.getenv("MODEL_NAME") or os.getenv("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct"),
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_prompt},
