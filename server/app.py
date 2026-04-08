@@ -43,8 +43,72 @@ def root():
     return {
         "name": "hierarchical-rag-tutor",
         "description": "Hierarchical RAG AI Tutor RL Environment",
-        "endpoints": ["/reset", "/step", "/state/{session_id}", "/health"],
+        "endpoints": ["/reset", "/step", "/state", "/health", "/metadata", "/schema"],
     }
+
+
+@app.get("/metadata")
+def metadata():
+    return {
+        "name": "hierarchical-rag-tutor",
+        "description": "An AI Tutor RL environment where an agent navigates a library of educational books using hierarchical RAG to answer student questions. Tasks range from easy (single-book lookup) to hard (multi-book synthesis).",
+        "version": "1.0.0",
+    }
+
+
+@app.get("/schema")
+def schema():
+    return {
+        "action": {
+            "type": "object",
+            "properties": {
+                "tool": {"type": "string", "description": "Tool name to call"},
+                "args": {"type": "object", "description": "Tool arguments"},
+            },
+            "required": ["tool"],
+        },
+        "observation": {
+            "type": "object",
+            "properties": {
+                "feedback": {"type": "string"},
+                "system_prompt": {"type": "string"},
+                "retrieved_chunks": {"type": "array"},
+                "tools_called": {"type": "array"},
+                "steps_taken": {"type": "integer"},
+                "reward": {"type": "number"},
+                "done": {"type": "boolean"},
+            },
+        },
+        "state": {
+            "type": "object",
+            "properties": {
+                "task_id": {"type": "string"},
+                "difficulty": {"type": "string"},
+                "step_count": {"type": "integer"},
+                "done": {"type": "boolean"},
+            },
+        },
+    }
+
+
+@app.post("/mcp")
+def mcp():
+    return {
+        "jsonrpc": "2.0",
+        "result": {
+            "tools": [
+                {"name": "search_book", "description": "Search a specific book for relevant content"},
+                {"name": "list_books", "description": "List available books in the library"},
+                {"name": "talk_to_student", "description": "Send final answer to the student"},
+            ]
+        },
+        "id": None,
+    }
+
+
+@app.get("/state")
+def get_state_list():
+    return {"sessions": list(_sessions.keys())}
 
 
 @app.post("/reset")
