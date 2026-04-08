@@ -27,3 +27,36 @@
   "Chapter 6: Sorting Algorithms":
     summary: "Covers bubble sort, merge sort, and their time complexities."
     content_path: "content/python_algorithms/chapter6_sorting.md"
+
+"Alien Flora of Exoplanet Zephyr-9":
+  _description: "A speculative guide on the biology and evolutionary botany of planets orbiting M-type red dwarf stars."
+  "Chapter 3: Photosynthesis under Red Dwarfs":
+    summary: "Explains the light-absorption mechanisms of plants on Zephyr-9 and why their pigmentation differs drastically from Earth flora."
+    content: |
+      The native flora of Zephyr-9 relies on a process analogous to Earth-based photosynthesis, but adapted to the low-energy infrared and deep-red photon output of its host star, a small M-type red dwarf. Because high-energy blue and ultraviolet light are virtually absent, the plants cannot afford to reflect any usable light.
+
+      Consequently, the dominant photosynthetic pigment on Zephyr-9 is not chlorophyll. Instead, evolution favored 'retinal-melanin' hybrids, which are highly efficient at absorbing the entire spectrum of available starlight. To the human eye, this complete absorption of visible light results in the plants appearing pitch black. This maximizes energy extraction in a dim environment, trading the vibrant greens of Earth for absolute solar efficiency.
+
+"Deep Learning":
+  _description: "Covers deep learning foundations including sequence modeling, RNNs, optimization challenges, and practical methodology."
+  "Chapter 10: Sequence Modeling and RNNs":
+    summary: "Covers RNN architecture, backpropagation through time, and the vanishing/exploding gradient problem with mitigation via gradient clipping."
+    content_path: "content/deep_learning/chapter10_rnn_gradients.md"
+  "Chapter 11: Practical Methodology":
+    summary: "Covers performance metrics, baseline models, data collection decisions, hyperparameter tuning (manual, grid, random, Bayesian), and debugging strategies."
+    content_path: "content/deep_learning/chapter11_methodology.md"
+
+"Quantum Computation and Quantum Information":
+  _description: "Covers quantum computation theory including quantum gates, noise, quantum operations formalism, and error correction."
+  "Chapter 8: Quantum Noise and Quantum Operations":
+    summary: "Covers the quantum operations formalism (Kraus operators), non-unitary transformations, trace-preserving maps, and qubit erasure with thermodynamic consequences."
+    content_path: "content/quantum_computation/chapter8_quantum_operations.md"
+
+"Thermodynamics of Computation":
+  _description: "A specialized textbook connecting statistical mechanics, information theory, and the physical limits of computation."
+  "Chapter 4: Landauer's Principle and the Cost of Forgetting":
+    summary: "Derives Landauer's Principle, explaining the minimum thermodynamic cost of erasing one bit of information."
+    content: |
+      In 1961, Rolf Landauer solved the paradox of Maxwell's Demon by demonstrating that the creation of information is thermodynamically reversible, but the destruction of information is not. Landauer's Principle states that logically irreversible operations—such as erasing a bit of memory—must necessarily be accompanied by an increase in the entropy of the environment.
+
+      Mathematically, the erasure of one bit of information requires the dissipation of a minimum amount of energy equal to E = kT ln(2), where k is the Boltzmann constant and T is the absolute temperature of the environment. In the context of quantum computing, when a qubit in a mixed state is forcefully reset to a pure baseline state (erased), the entropy of the quantum system decreases. To satisfy the Second Law of Thermodynamics, this 'missing' entropy is expelled into the laboratory environment as heat.

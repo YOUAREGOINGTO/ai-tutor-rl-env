@@ -61,6 +61,51 @@ hard_1:
     - Deduct 0.4 if either citation is missing
     - Deduct if formula variables are left unexplained
 
+easy_3:
+  difficulty: easy
+  student_question: "I'm reading about Exoplanet Zephyr-9. Why do the plants there look black instead of green like on Earth?"
+  required_books:
+    - "Alien Flora of Exoplanet Zephyr-9"
+  max_steps: 6
+  ground_truth_answer: "Plants on Zephyr-9 look black because they orbit a red dwarf star that emits low-energy light. Their pigments (retinal-melanin hybrids) evolved to absorb all available visible and infrared light for maximum energy extraction, reflecting nothing back to the human eye."
+  grading_rubric: |
+    - Must mention the red dwarf star type as the root cause
+    - Must state that black coloration results from absorbing all available light
+    - Must name 'retinal-melanin' hybrids as the pigment (not Earth chlorophyll)
+    - Deduct heavily if agent hallucinates Earth-based chlorophyll as the answer
+    - Deduct if star type is not mentioned
+
+medium_3:
+  difficulty: medium
+  student_question: "I am training a standard RNN and after 10 epochs my loss turns to NaN. What is the mathematical reason and what does Goodfellow's Deep Learning book recommend to fix it?"
+  required_books:
+    - "Deep Learning"
+  max_steps: 8
+  ground_truth_answer: "Loss turns NaN due to exploding gradients. Mathematically, RNNs repeatedly multiply the same weight matrix W across time steps. If eigenvalues of W exceed 1, gradients grow exponentially during BPTT. Chapter 10 recommends Gradient Clipping: rescale the gradient when its norm exceeds a threshold, preserving direction but capping magnitude."
+  grading_rubric: |
+    - Must explain repeated weight matrix multiplication as the cause
+    - Must mention eigenvalues greater than 1 causing exponential gradient growth
+    - Must explicitly name Gradient Clipping as the recommended mitigation
+    - Must explain that clipping rescales the gradient norm without changing direction
+    - Deduct heavily if LSTMs/GRUs are given as the answer without mentioning gradient clipping first
+    - Must cite Deep Learning Chapter 10
+
+hard_3:
+  difficulty: hard
+  student_question: "Explain the physical cost of resetting a quantum computer's memory. Use Nielsen & Chuang's quantum operations formalism and Landauer's Principle to explain why resetting a qubit increases entropy in the lab environment."
+  required_books:
+    - "Quantum Computation and Quantum Information"
+    - "Thermodynamics of Computation"
+  max_steps: 12
+  ground_truth_answer: "Resetting a qubit is a non-unitary, trace-preserving quantum operation described by Kraus operators (Nielsen & Chuang Ch8). It maps any mixed state rho to pure state |0><0|, decreasing the qubit's von Neumann entropy. By Landauer's Principle (Thermodynamics of Computation Ch4), this logically irreversible operation must dissipate minimum energy E = kT ln(2) as heat into the environment, increasing environmental entropy to satisfy the Second Law of Thermodynamics."
+  grading_rubric: |
+    - Must define qubit erasure as a non-unitary trace-preserving operation using Kraus operators
+    - Must state that the qubit's internal entropy decreases during reset (mixed to pure state)
+    - Must explicitly state Landauer's formula E = kT ln(2)
+    - Must connect heat dissipation to preserving the Second Law of Thermodynamics
+    - Must cite BOTH books — max score 50% if only one book's perspective is present
+    - Deduct if Kraus operators or operator-sum representation is not mentioned
+
 hard_2:
   difficulty: hard
   student_question: "Explain geometric sequences AND write a Python function to compute their sum."
