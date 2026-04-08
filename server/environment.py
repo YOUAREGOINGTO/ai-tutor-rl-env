@@ -119,6 +119,11 @@ def _call_judge(task: TutorState, answer: str) -> str:
     return resp.choices[0].message.content.strip()
 
 
+def _clamp(score: float) -> float:
+    """Clamp score to strictly open interval (0, 1) as required by validator."""
+    return max(0.01, min(0.99, score))
+
+
 def _llm_judge(task: TutorState, answer: str, max_retries: int = 3) -> tuple[float, str]:
     for attempt in range(max_retries):
         try:
@@ -127,11 +132,11 @@ def _llm_judge(task: TutorState, answer: str, max_retries: int = 3) -> tuple[flo
             parsed = json.loads(clean)
             score = float(parsed["score"])
             if 0.0 <= score <= 1.0:
-                return score, parsed.get("student_reply", "Thanks.")
+                return _clamp(score), parsed.get("student_reply", "Thanks.")
             # score out of range → retry
         except Exception:
             pass
-    return 0.0, "Could not evaluate the response."
+    return 0.01, "Could not evaluate the response."
 
 
 # ── Environment ────────────────────────────────────────────────────────────────
@@ -188,10 +193,10 @@ class TutorEnvironment:
                 retrieved_chunks=state.retrieved_chunks,
                 tools_called=state.tools_called,
                 steps_taken=state.step_count,
-                reward=0.0,
+                reward=0.01,
                 done=True,
             )
-            return obs, 0.0, True, state
+            return obs, 0.01, True, state
 
         # ── Tool dispatch ─────────────────────────────────────────────────────
         feedback = ""
@@ -262,6 +267,7 @@ class TutorEnvironment:
 
         else:
             feedback = f"[System Error] Unknown tool: '{action.tool}'"
+            reward = 0.01
 
         state.done = done
         obs = TutorObservation(
