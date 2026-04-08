@@ -1,0 +1,20 @@
+[project]
+name = "hierarchical-rag-tutor"
+version = "1.0.0"
+description = "An OpenEnv-compatible AI Tutor RL environment using hierarchical RAG"
+requires-python = ">=3.11"
+dependencies = [
+    "openenv-core>=0.2.0",
+    "fastapi",
+    "uvicorn[standard]",
+    "pyyaml",
+    "openai",
+    "requests",
+    "python-dotenv",
+]
+
+[project.scripts]
+server = "server.app:main"
+
+[project.urls]
+Homepage = "https://huggingface.co/spaces/Yaswanth123/rl-env-hierarchical-rag-tutor"
