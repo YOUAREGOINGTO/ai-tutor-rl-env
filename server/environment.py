@@ -244,6 +244,13 @@ class TutorEnvironment:
                 done   = False
             else:
                 answer = action.args.get("answer", "")
+                # Unwrap if agent double-encoded the answer as a nested JSON tool call
+                try:
+                    inner = json.loads(answer)
+                    if isinstance(inner, dict) and inner.get("tool") == "talk_to_student":
+                        answer = inner.get("args", {}).get("answer", answer)
+                except (json.JSONDecodeError, TypeError):
+                    pass
                 score, student_reply = _llm_judge(state, answer)
                 state.final_score = score
                 done     = True
