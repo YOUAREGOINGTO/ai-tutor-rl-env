@@ -8,99 +8,73 @@ app_port: 8000
 pinned: false
 ---
 
-# Hierarchical RAG AI Tutor Environment
+# AI Tutor Environment
 
-An OpenEnv-compatible RL environment where an LLM agent acts as an AI Tutor. The agent navigates a structured library of educational books using a hierarchical RAG tool chain to answer student questions. Graded by an LLM-as-judge with per-task rubrics.
+An OpenEnv RL environment where an LLM agent acts as an AI Tutor. The agent must navigate a structured library of educational books to answer  questions — it cannot answer from memory alone.
 
-## Environment Description
+## Why This Environment?
 
-The agent is given a student question and must:
-1. Browse the library (`list_books`) to discover available books
-2. Retrieve chapter summaries (`get_summaries`) to find the relevant chapter
-3. Read the specific chapter (`read_chapter`) to retrieve content
-4. Answer the student (`talk_to_student`) — scored by LLM judge on accuracy and citations
+Most QA benchmarks let models answer directly from training knowledge. This environment forces grounded retrieval: the agent must locate the right book, find the right chapter, read it, and only then answer. This tests multi-step planning, tool use, and citation accuracy — skills critical for trustworthy AI tutors.
 
-Tasks range from single-book lookups (easy) to multi-book synthesis requiring citations from two different sources (hard).
+## How It Works
 
-## Action Space
+The agent follows a strict hierarchical retrieval workflow:
 
-The agent outputs a JSON action with one tool call per step:
+1. `list_books` — discover what books are available
+2. `get_summaries` — see chapter summaries for a book
+3. `read_chapter` — read the full chapter content
+4. `talk_to_student` — deliver the final answer (ends the episode)
 
-```json
-{"tool": "list_books", "args": {}}
-{"tool": "get_summaries", "args": {"book_title": "Python Basics"}}
-{"tool": "read_chapter", "args": {"book_title": "Python Basics", "chapter_title": "Chapter 4: For Loops"}}
-{"tool": "talk_to_student", "args": {"answer": "For loops iterate over sequences..."}}
-```
+Skipping retrieval and answering directly is penalized. The agent must read before it can teach.
 
-**Available tools:**
-| Tool | Args | Description |
-|------|------|-------------|
+## Tools
+
+| Tool | Args | What it does |
+|------|------|--------------|
 | `list_books` | none | Lists all books with descriptions |
 | `get_summaries` | `book_title` | Returns chapter summaries for a book |
 | `read_chapter` | `book_title`, `chapter_title` | Returns full chapter content |
-| `talk_to_student` | `answer` | Submits final answer; triggers LLM grading |
+| `talk_to_student` | `answer` | Submits final answer — triggers LLM judge |
 
-## Observation Space
+## Reward — LLM as Judge
 
-Each step returns a `TutorObservation`:
+Every answer is scored `0.0–1.0` by an LLM judge using a per-task rubric. The judge checks:
 
-```json
-{
-  "feedback": "Here are the available books: ...",
-  "system_prompt": "You are an AI Tutor...",
-  "retrieved_chunks": ["chunk1", "chunk2"],
-  "tools_called": ["list_books", "get_summaries"],
-  "steps_taken": 2,
-  "reward": 0.0,
-  "done": false
-}
+- Factual correctness against a ground truth answer
+- Required concepts are explained (e.g. eigenvalues, Kraus operators)
+- Correct citations to specific books and chapters
+- Working code examples where required
+
+Partial credit is given for incomplete but partially correct answers. Hard tasks require citing two different books — missing either citation costs points.
+
+## Task Format
+
+Each task in `tasks.yaml` follows this structure:
+
+```yaml
+hard_3:
+  difficulty: hard
+  student_question: "Explain the physical cost of resetting a quantum computer's memory..."
+  required_books: ["Quantum Computation and Quantum Information", "Thermodynamics of Computation"]
+  max_steps: 12
+  ground_truth_answer: "..."
+  grading_rubric: |
+    - Must define qubit erasure using Kraus operators
+    - Must state Landauer's formula E = kT ln(2)
+    - Must cite BOTH books
 ```
 
-## Reward
-
-- `0.0–1.0` continuous score from LLM-as-judge
-- Partial credit for incomplete but partially correct answers
-- Protocol violations (skipping required steps) penalized
-- Episode ends when `talk_to_student` is called or `max_steps` is reached
-
-## Tasks
-
-| Task ID | Difficulty | Books Required | Description |
-|---------|-----------|---------------|-------------|
-| `easy_1` | Easy | Python Basics | For loops explanation |
-| `easy_2` | Easy | Python Basics | Variable declaration |
-| `easy_3` | Easy | Alien Flora of Exoplanet Zephyr-9 | Why plants look black |
-| `medium_1` | Medium | Python Basics | KeyError diagnosis and fix |
-| `medium_2` | Medium | Python Algorithms | Bubble sort vs merge sort |
-| `medium_3` | Medium | Deep Learning | RNN exploding gradients + gradient clipping |
-| `hard_1` | Hard | Math Fundamentals + Python Algorithms | Compound interest formula + Python function |
-| `hard_2` | Hard | Math Fundamentals + Python Algorithms | Geometric sequences + sum function |
-| `hard_3` | Hard | Quantum Computation + Thermodynamics | Qubit erasure — Kraus operators + Landauer's Principle |
-
-## Setup & Running
-
-### Prerequisites
-
-- Python 3.11+
-- A HuggingFace token with inference API access
+## Setup
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and fill in your values:
-
-```bash
-cp .env.example .env
 ```
-
-```
-HF_TOKEN=your_huggingface_token_here
+HF_TOKEN=your_huggingface_token
 API_BASE_URL=https://router.huggingface.co/v1
-MODEL_ID=Qwen/Qwen2.5-72B-Instruct
-ENV_BASE_URL=http://localhost:8000
+MODEL_NAME=Qwen/Qwen2.5-72B-Instruct
 ```
 
-### Run with Docker (recommended)
+### Run with Docker
 
 ```bash
 docker compose up --build
@@ -112,11 +86,10 @@ python inference.py
 ```bash
 pip install -r requirements.txt
 
-# Terminal 1: start server
-cd server
-python -m uvicorn app:app --port 8000
+# Terminal 1
+cd server && python -m uvicorn app:app --port 8000
 
-# Terminal 2: run inference
+# Terminal 2
 python inference.py
 ```
 
@@ -126,24 +99,5 @@ python inference.py
 |----------|--------|-------------|
 | `/reset` | POST | Start a new episode |
 | `/step` | POST | Execute one action |
-| `/state` | GET | Inspect current session state |
-| `/health` | GET | Health check (returns 200) |
-
-## Baseline Scores
-
-Running `python inference.py` produces reproducible scores:
-
-```
-[START] task=easy_1 env=hierarchical-rag-tutor model=Qwen/Qwen2.5-72B-Instruct
-[STEP] step=1 action={"tool": "list_books", "args": {}} reward=0.0000 done=False error=''
-...
-[END] success=True steps=4 score=0.9000 rewards=[0.0, 0.0, 0.0, 0.9]
-
-[START] task=medium_1 ...
-[END] success=True steps=5 score=0.8500 ...
-
-[START] task=hard_1 ...
-[END] success=True steps=7 score=0.7500 ...
-
-=== Results: 3/3 tasks passed ===
-```
+| `/state/{session_id}` | GET | Inspect session state |
+| `/health` | GET | Health check |
