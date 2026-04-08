@@ -1,0 +1,10 @@
+spec_version: 1
+name: hierarchical-rag-tutor
+version: "1.0.0"
+description: "An AI Tutor environment where an LLM agent navigates a library of educational books using hierarchical RAG to answer student questions. Tasks range from easy (single-book lookup) to hard (multi-book synthesis). Graded by an LLM-as-judge with per-task rubrics."
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+action_type: TutorAction
+observation_type: TutorObservation

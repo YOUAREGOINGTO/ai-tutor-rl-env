@@ -14,7 +14,7 @@ from openai import OpenAI
 ENV_BASE_URL = os.getenv("ENV_BASE_URL", "http://localhost:8000")
 HF_TOKEN     = os.environ["HF_TOKEN"]
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
-MODEL_ID     = os.getenv("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct")
+MODEL_ID     = os.getenv("MODEL_NAME") or os.getenv("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct")
 ENV_NAME     = "hierarchical-rag-tutor"
 
 client = OpenAI(api_key=HF_TOKEN, base_url=API_BASE_URL)
