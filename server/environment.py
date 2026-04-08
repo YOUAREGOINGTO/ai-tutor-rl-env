@@ -120,8 +120,8 @@ def _call_judge(task: TutorState, answer: str) -> str:
 
 
 def _clamp(score: float) -> float:
-    """Clamp score to strictly open interval (0, 1) as required by validator."""
-    return max(0.01, min(0.99, score))
+    """Clamp and round score to strictly open interval (0, 1) as required by validator."""
+    return round(max(0.01, min(0.99, score)), 2)
 
 
 def _llm_judge(task: TutorState, answer: str, max_retries: int = 3) -> tuple[float, str]:
@@ -175,7 +175,7 @@ class TutorEnvironment:
                 f"Student asks: \"{self._state.student_question}\"\n"
             ),
             system_prompt=system_prompt,
-            reward=0.005,
+            reward=0.01,
             done=False,
         )
 
@@ -200,7 +200,7 @@ class TutorEnvironment:
 
         # ── Tool dispatch ─────────────────────────────────────────────────────
         feedback = ""
-        reward   = 0.005  # small non-zero reward for valid tool calls; terminal steps overwrite this
+        reward   = 0.01  # small non-zero reward for valid tool calls; terminal steps overwrite this
         done     = False
 
         if action.tool == "list_books":
