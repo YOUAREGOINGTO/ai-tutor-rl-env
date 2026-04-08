@@ -15,7 +15,7 @@ class TutorObservation:
     retrieved_chunks: list = field(default_factory=list)
     tools_called: list = field(default_factory=list)
     steps_taken: int = 0
-    reward: float = 0.0
+    reward: float = 0.01
     done: bool = False
 
 

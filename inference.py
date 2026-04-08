@@ -80,12 +80,12 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
                 f"reward=0.00 done=true error={step_resp.text}",
                 flush=True,
             )
-            rewards.append(0.0)
+            rewards.append(0.01)
             break
 
         step_data = step_resp.json()
         obs_data  = step_data.get("observation", step_data)
-        reward    = float(step_data.get("reward", obs_data.get("reward", 0.0)))
+        reward    = float(step_data.get("reward", obs_data.get("reward", 0.01)))
         done      = bool(step_data.get("done", obs_data.get("done", False)))
         feedback  = obs_data.get("feedback", "")
 
