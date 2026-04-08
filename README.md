@@ -90,8 +90,13 @@ docker build -t hierarchical-rag-tutor .
 # Step 2 — start the environment server
 docker run -p 8000:8000 --env-file .env hierarchical-rag-tutor
 
-# Step 3 — in a second terminal, run the agent
-python inference.py
+# Step 3 — in a second terminal, run the agent inside Docker
+docker run --rm \
+  -e HF_TOKEN=your_huggingface_token \
+  -e API_BASE_URL=https://router.huggingface.co/v1 \
+  -e MODEL_NAME=Qwen/Qwen2.5-72B-Instruct \
+  -e ENV_BASE_URL=http://host.docker.internal:8000 \
+  hierarchical-rag-tutor python inference.py
 ```
 
 ### Run locally (without Docker)
