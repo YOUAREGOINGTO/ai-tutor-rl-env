@@ -116,14 +116,13 @@ def run_episode(task_cfg: dict) -> dict:
         messages.append({"role": "assistant", "content": raw})
         messages.append({"role": "user", "content": feedback})
 
-    success = final_score >= 0.7
     print(
-        f"[END] success={success} "
+        f"[END] task={task_id} "
         f"steps={step_num} "
         f"score={final_score:.4f} "
         f"rewards={[round(r, 4) for r in rewards]}"
     )
-    return {"task_id": task_id, "success": success, "score": final_score, "steps": step_num}
+    return {"task_id": task_id, "score": final_score, "steps": step_num}
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -134,8 +133,6 @@ if __name__ == "__main__":
         results.append(result)
         print()
 
-    passed = sum(1 for r in results if r["success"])
-    print(f"=== Results: {passed}/{len(results)} tasks passed ===")
+    print(f"=== Results: {len(results)} tasks completed ===")
     for r in results:
-        status = "PASS" if r["success"] else "FAIL"
-        print(f"  [{status}] {r['task_id']} — score={r['score']:.4f} steps={r['steps']}")
+        print(f"  {r['task_id']} — score={r['score']:.4f} steps={r['steps']}")
