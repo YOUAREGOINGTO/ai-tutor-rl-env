@@ -115,6 +115,7 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
 
 EVAL_TASKS = [
     {"difficulty": "easy",   "task_id": "easy_3"},
+    {"difficulty": "easy",   "task_id": "easy_4"},   # out-of-context: topic not in library
     {"difficulty": "medium", "task_id": "medium_1"},
     {"difficulty": "medium", "task_id": "medium_3"},
     {"difficulty": "hard",   "task_id": "hard_1"},

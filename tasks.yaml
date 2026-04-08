@@ -106,6 +106,20 @@ hard_3:
     - Must cite BOTH books — max score 50% if only one book's perspective is present
     - Deduct if Kraus operators or operator-sum representation is not mentioned
 
+easy_4:
+  difficulty: easy
+  student_question: "Can you explain how async/await works in Python for concurrent programming?"
+  required_books: ["Python Basics"]
+  max_steps: 6
+  ground_truth_answer: "async/await is not covered in the available library. Python Basics only covers variables, for loops, and dictionaries. The agent should check the book, find no relevant chapter, and clearly tell the student this topic is not available in the library."
+  grading_rubric: |
+    - Must call list_books and get_summaries to verify the topic is not covered
+    - Must clearly tell the student that async/await is NOT in the library
+    - Must NOT hallucinate or answer from memory about async/await
+    - Score 1.0 if agent checks the books and honestly says the topic is unavailable
+    - Score 0.0 if agent answers with async/await content not sourced from any chapter
+    - Deduct heavily for any response that provides async/await information without citing a chapter
+
 hard_2:
   difficulty: hard
   student_question: "Explain geometric sequences AND write a Python function to compute their sum."
