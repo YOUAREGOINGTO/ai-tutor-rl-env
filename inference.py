@@ -32,7 +32,7 @@ def call_agent(messages: list[dict]) -> tuple[str, dict]:
         model=MODEL_NAME,
         messages=messages,
         max_tokens=2000,
-        temperature=0.2,
+        temperature=0.8,
     )
     raw = resp.choices[0].message.content.strip()
     clean = raw.strip("`").removeprefix("json").strip()
