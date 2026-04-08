@@ -38,6 +38,15 @@ class StepRequest(BaseModel):
 
 # ── Endpoints ──────────────────────────────────────────────────────────────────
 
+@app.get("/")
+def root():
+    return {
+        "name": "hierarchical-rag-tutor",
+        "description": "Hierarchical RAG AI Tutor RL Environment",
+        "endpoints": ["/reset", "/step", "/state/{session_id}", "/health"],
+    }
+
+
 @app.post("/reset")
 def reset(req: ResetRequest):
     sid = str(uuid.uuid4())
