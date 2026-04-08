@@ -68,20 +68,33 @@ hard_3:
 
 ### Environment Variables
 
+Create a `.env` file in the project root:
+
 ```
 HF_TOKEN=your_huggingface_token
 API_BASE_URL=https://router.huggingface.co/v1
 MODEL_NAME=Qwen/Qwen2.5-72B-Instruct
+ENV_BASE_URL=http://localhost:8000
 ```
 
-### Run with Docker
+`ENV_BASE_URL` points inference.py at your local Docker container. If omitted, it defaults to the live HF Space.
+
+### Run with Docker (Hackathon-style evaluation)
+
+This replicates exactly how the hackathon evaluates the submission:
 
 ```bash
-docker compose up --build
+# Step 1 — build the Docker image
+docker build -t hierarchical-rag-tutor .
+
+# Step 2 — start the environment server
+docker run -p 8000:8000 --env-file .env hierarchical-rag-tutor
+
+# Step 3 — in a second terminal, run the agent
 python inference.py
 ```
 
-### Run locally
+### Run locally (without Docker)
 
 ```bash
 pip install -r requirements.txt
