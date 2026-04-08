@@ -11,7 +11,7 @@ load_dotenv()
 from openai import OpenAI
 
 # ── Config ────────────────────────────────────────────────────────────────────
-ENV_BASE_URL = os.getenv("ENV_BASE_URL", "http://localhost:8000")
+ENV_BASE_URL = os.getenv("ENV_BASE_URL", "https://Yaswanth123-rl-env-hierarchical-rag-tutor.hf.space")
 HF_TOKEN     = os.getenv("HF_TOKEN")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME") or os.getenv("MODEL_ID", "Qwen/Qwen2.5-72B-Instruct")
