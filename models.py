@@ -34,5 +34,7 @@ class TutorState:
     retrieved_chunks: list = field(default_factory=list)
     tools_called: list = field(default_factory=list)
     successful_reads: list = field(default_factory=list)
+    summarized_books: list = field(default_factory=list)
+    protocol_violations: list = field(default_factory=list)
     done: bool = False
     final_score: Optional[float] = None

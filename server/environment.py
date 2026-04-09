@@ -58,6 +58,7 @@ RULES:
 - NEVER guess chapter names. Always call get_summaries first to see the exact chapter titles.
 - You MUST call read_chapter at least once successfully before talk_to_student.
 - You MUST call get_summaries separately for every book before reading from it.
+- Reading a chapter before calling get_summaries for that book will reduce your final score.
 - If the book does not contain the exact information, explicitly say so in your answer.
 - talk_to_student ends the episode — make your answer complete, clear, and well-cited.
 - Explain concepts with examples and cite the specific chapter you read from.
@@ -139,6 +140,27 @@ def _llm_judge(task: TutorState, answer: str, max_retries: int = 3) -> tuple[flo
     return 0.01, "Could not evaluate the response."
 
 
+def _apply_protocol_penalties(task: TutorState, score: float) -> tuple[float, list[str]]:
+    """Apply deterministic penalties for protocol violations after LLM judging."""
+    notes = []
+    penalty = 0.0
+
+    skipped_summary_books = sorted({
+        violation.split("::", 1)[1]
+        for violation in task.protocol_violations
+        if violation.startswith("read_without_summary::")
+    })
+    if skipped_summary_books:
+        skipped_penalty = 0.15 * len(skipped_summary_books)
+        penalty += skipped_penalty
+        notes.append(
+            "Skipped get_summaries before reading "
+            f"({', '.join(skipped_summary_books)}): -{skipped_penalty:.2f}"
+        )
+
+    return _clamp(score - penalty), notes
+
+
 # ── Environment ────────────────────────────────────────────────────────────────
 
 class TutorEnvironment:
@@ -216,6 +238,8 @@ class TutorEnvironment:
             if book is None:
                 feedback = f"[System Error] Book not found: '{book_title}'"
             else:
+                if book_title not in state.summarized_books:
+                    state.summarized_books.append(book_title)
                 summaries = {ch: data["summary"] for ch, data in book.items() if ch != "_description"}
                 feedback = f"Summaries for '{book_title}':\n" + json.dumps(summaries, indent=2)
 
@@ -230,12 +254,21 @@ class TutorEnvironment:
                 if chapter is None:
                     feedback = f"[System Error] Chapter not found: '{chapter_title}'"
                 else:
+                    warning = ""
+                    if book_title not in state.summarized_books:
+                        violation = f"read_without_summary::{book_title}"
+                        if violation not in state.protocol_violations:
+                            state.protocol_violations.append(violation)
+                        warning = (
+                            "[Protocol Warning] You read this chapter before calling "
+                            "get_summaries for the book. Final reward may be reduced.\n\n"
+                        )
                     chunk = f"[{book_title} / {chapter_title}]\n{chapter['content']}"
                     state.retrieved_chunks.append(chunk)
                     key = f"{book_title}::{chapter_title}"
                     if key not in state.successful_reads:
                         state.successful_reads.append(key)
-                    feedback = chunk
+                    feedback = warning + chunk
 
         elif action.tool == "talk_to_student":
             # Tasks with no required_books (open-ended) skip the retrieval check
@@ -257,11 +290,16 @@ class TutorEnvironment:
                 except (json.JSONDecodeError, TypeError):
                     pass
                 score, student_reply = _llm_judge(state, answer)
+                score, protocol_notes = _apply_protocol_penalties(state, score)
                 state.final_score = score
                 done     = True
                 reward   = score
+                penalty_block = ""
+                if protocol_notes:
+                    penalty_block = "[Protocol Penalties] " + " | ".join(protocol_notes) + "\n"
                 feedback = (
                     f"[Student Reply] {student_reply}\n"
+                    f"{penalty_block}"
                     f"[Session Score] {score:.2f}"
                 )
 

@@ -54,6 +54,7 @@ Intermediate tool steps (`list_books`, `get_summaries`, `read_chapter`) return `
 Reward hacking is further prevented by:
 - `max_steps` per task (easy: 5–6, medium: 8, hard: 12) — episode terminates on timeout
 - Protocol enforcement: `talk_to_student` without a successful `read_chapter` returns `reward=0.0, done=False`, so the agent cannot skip retrieval and still collect reward
+- Reading a chapter before `get_summaries` on that book triggers a deterministic final-score penalty of `0.15` per violated book
 - LLM judge scores are clamped to `[0.01, 0.99]` — no exact `0` or `1` possible
 - Timeout returns `0.01`, which stays validator-safe while still acting as a near-failure score
 
@@ -127,5 +128,5 @@ python inference.py
 |----------|--------|-------------|
 | `/reset` | POST | Start a new episode |
 | `/step` | POST | Execute one action |
-| `/state/{session_id}` | GET | Inspect session state |
+| `/state/{session_id}` | GET | Inspect sanitized runtime state |
 | `/health` | GET | Health check |

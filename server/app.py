@@ -21,6 +21,16 @@ env = TutorEnvironment()
 _sessions: dict = {}
 
 
+def _public_state_view(state) -> dict:
+    """Return a sanitized session snapshot safe for external clients."""
+    return {
+        "task_id": state.task_id,
+        "difficulty": state.difficulty,
+        "step_count": state.step_count,
+        "done": state.done,
+    }
+
+
 # ── Request models ─────────────────────────────────────────────────────────────
 
 class ResetRequest(BaseModel):
@@ -142,7 +152,7 @@ def get_state(session_id: str):
     state = _sessions.get(session_id)
     if state is None:
         raise HTTPException(status_code=404, detail="Session not found.")
-    return {"session_id": session_id, "state": asdict(state)}
+    return {"session_id": session_id, "state": _public_state_view(state)}
 
 
 @app.get("/health")
