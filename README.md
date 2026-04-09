@@ -38,7 +38,7 @@ Skipping retrieval and answering directly is penalized. The agent must read befo
 
 ## Reward — LLM as Judge
 
-Every final answer is scored strictly in `(0, 1)` by an LLM judge using a per-task rubric. The judge checks:
+This environment uses an LLM as the judge for the final `talk_to_student` action. Every final answer is scored strictly in `(0, 1)` using a task-specific rubric. The judge checks:
 
 - Factual correctness against a ground truth answer
 - Required concepts are explained (e.g. eigenvalues, Kraus operators)
@@ -49,12 +49,13 @@ Partial credit is given for incomplete but partially correct answers. Hard tasks
 
 ### Reward Shaping and Anti-Hacking Design
 
-Intermediate tool steps (`list_books`, `get_summaries`, `read_chapter`) return a small reward of `0.005` — non-zero to satisfy the validator but too small to exploit. The agent cannot accumulate meaningful reward by spamming tool calls. Real reward only comes from the LLM judge at `talk_to_student`.
+Intermediate tool steps (`list_books`, `get_summaries`, `read_chapter`) return `0.0`. This keeps retrieval behavior neutral: the agent is not rewarded for simply calling tools, and meaningful reward only comes from the judged final answer.
 
 Reward hacking is further prevented by:
 - `max_steps` per task (easy: 5–6, medium: 8, hard: 12) — episode terminates on timeout
-- Protocol enforcement: `talk_to_student` without prior `read_chapter` returns `reward=0.05, done=False` (penalized but not terminal, agent must recover)
+- Protocol enforcement: `talk_to_student` without a successful `read_chapter` returns `reward=0.0, done=False`, so the agent cannot skip retrieval and still collect reward
 - LLM judge scores are clamped to `[0.01, 0.99]` — no exact `0` or `1` possible
+- Timeout returns `0.01`, which stays validator-safe while still acting as a near-failure score
 
 ## Task Format
 

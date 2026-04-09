@@ -27,6 +27,17 @@ _FALLBACK_SYSTEM_PROMPT = (
 )
 
 
+def normalize_open_interval(value: float, default: float = 0.01) -> float:
+    """Keep validator-facing scores strictly inside (0, 1)."""
+    try:
+        score = float(value)
+    except (TypeError, ValueError):
+        return default
+    if score != score:  # NaN check
+        return default
+    return round(max(0.01, min(0.99, score)), 2)
+
+
 def call_agent(messages: list[dict]) -> tuple[str, dict]:
     resp = client.chat.completions.create(
         model=MODEL_NAME,
@@ -63,7 +74,7 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
     step_num    = 0
     rewards     = []
     done        = False
-    final_score = 0.0
+    final_score = 0.01
 
     while not done:
         step_num += 1
@@ -75,12 +86,14 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
         )
 
         if step_resp.status_code != 200:
+            error_reward = 0.01
+            final_score = error_reward
             print(
                 f"[STEP] step={step_num} action={json.dumps(action_dict)} "
-                f"reward=0.00 done=true error={step_resp.text}",
+                f"reward={error_reward:.2f} done=true error={step_resp.text}",
                 flush=True,
             )
-            rewards.append(0.01)
+            rewards.append(error_reward)
             break
 
         step_data = step_resp.json()
@@ -88,6 +101,9 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
         reward    = float(step_data.get("reward", obs_data.get("reward", 0.01)))
         done      = bool(step_data.get("done", obs_data.get("done", False)))
         feedback  = obs_data.get("feedback", "")
+
+        if done:
+            reward = normalize_open_interval(reward)
 
         error_str = "null"
         if any(tag in feedback for tag in ("[System Error]", "[Protocol Error]", "[TIMEOUT]")):
@@ -108,7 +124,8 @@ def run_episode(difficulty: str = "easy", task_id: str | None = None) -> None:
     rewards_str = ",".join(f"{r:.2f}" for r in rewards)
     success     = final_score >= 0.3
     print(
-        f"[END] success={str(success).lower()} steps={step_num} rewards={rewards_str}",
+        f"[END] success={str(success).lower()} steps={step_num} "
+        f"score={final_score:.2f} rewards={rewards_str}",
         flush=True,
     )
 

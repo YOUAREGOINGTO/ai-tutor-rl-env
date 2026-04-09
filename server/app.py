@@ -119,7 +119,7 @@ def reset(req: ResetRequest = Body(default=ResetRequest())):
     except (ValueError, KeyError) as e:
         raise HTTPException(status_code=422, detail=str(e))
     _sessions[sid] = env.state
-    return {"session_id": sid, "observation": asdict(obs), "reward": 0.01, "done": False}
+    return {"session_id": sid, "observation": asdict(obs), "reward": 0.0, "done": False}
 
 
 @app.post("/step")

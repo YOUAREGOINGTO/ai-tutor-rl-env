@@ -175,7 +175,7 @@ class TutorEnvironment:
                 f"Student asks: \"{self._state.student_question}\"\n"
             ),
             system_prompt=system_prompt,
-            reward=0.01,
+            reward=0.0,
             done=False,
         )
 
@@ -200,7 +200,7 @@ class TutorEnvironment:
 
         # ── Tool dispatch ─────────────────────────────────────────────────────
         feedback = ""
-        reward   = 0.01  # small non-zero reward for valid tool calls; terminal steps overwrite this
+        reward   = 0.0  # pre-judge tool calls carry no reward; terminal steps overwrite this
         done     = False
 
         if action.tool == "list_books":
@@ -245,7 +245,7 @@ class TutorEnvironment:
                     "[Protocol Error] You must call read_chapter successfully "
                     "before talking to the student."
                 )
-                reward = 0.05
+                reward = 0.0
                 done   = False
             else:
                 answer = action.args.get("answer", "")
@@ -267,7 +267,7 @@ class TutorEnvironment:
 
         else:
             feedback = f"[System Error] Unknown tool: '{action.tool}'"
-            reward = 0.01
+            reward = 0.0
 
         state.done = done
         obs = TutorObservation(
